@@ -1,0 +1,3 @@
+2do:
+	Git feature
+	exit button, to stop termux and close tab
