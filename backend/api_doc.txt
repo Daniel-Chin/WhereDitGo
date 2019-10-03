@@ -1,0 +1,6 @@
+Methods:
+	getAll
+	add
+	delete
+	git
+	shutdown

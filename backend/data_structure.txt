@@ -1,0 +1,16 @@
+in RAM: A linked list. 
+pickled.
+
+[
+	{
+		token: 'q4fq8p7f298'
+		amount: 3
+		currency: dollar
+		time: 394827
+		tags: [
+			...
+		]
+		comment: chicken sandwich
+	}
+	, ...
+]
