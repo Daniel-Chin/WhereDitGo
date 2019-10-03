@@ -8,8 +8,10 @@ Use this mobile app to record expenses.
 Run `dit` in Termux, and it will open your browser to present the app.  
 
 ## features
+The money amount input interface supports +-*/.  
 Git backup and version track your database.  
 Robust interrupt-proof file saving strategy.  
+Export your data free of charge. (The main reason I wrote this for myself)  
 
 ## Implementation
 Declarative without optimization.  

@@ -1,5 +1,7 @@
 in RAM: A linked list. 
 pickled.
+a node is: [content, next, prev]
+(so that node[-1] gives you prev. Why use list? It is best to pickle builtins to avoid unpickle failure. Also, object namespace is hashmap to begin with.)
 
 [
 	{
