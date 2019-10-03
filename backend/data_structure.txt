@@ -4,15 +4,16 @@ a node is: [content, next, prev]
 (so that node[-1] gives you prev. Why use list? It is best to pickle builtins to avoid unpickle failure. Also, object namespace is hashmap to begin with.)
 
 [
-	{
+	None, 
+	{	# named tuple
 		token: 'q4fq8p7f298'
 		amount: 3
-		currency: dollar
+		currency_type: dollar
 		time: 394827
 		tags: [
 			...
 		]
 		comment: chicken sandwich
-	}
-	, ...
+	}, 
+	...
 ]
