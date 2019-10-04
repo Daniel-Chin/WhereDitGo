@@ -1,19 +1,32 @@
-in RAM: A linked list. 
-pickled.
+On harddrive: JSON. 
+
 a node is: [content, next, prev]
 (so that node[-1] gives you prev. Why use list? It is best to pickle builtins to avoid unpickle failure. Also, object namespace is hashmap to begin with.)
 
 [
-	None, 
 	{	# named tuple
 		token: 'q4fq8p7f298'
-		amount: 3
-		currency_type: dollar
 		time: 394827
-		tags: [
-			...
-		]
-		comment: chicken sandwich
+		payload: {
+			amount: 3
+			currency_type: dollar
+			tags: [
+				...
+			]
+			comment: chicken sandwich
+		}
 	}, 
+	{
+		token, 
+		time, 
+		payload: {
+			tag_name, 
+			tag_explanation, 
+		}	
+	},
 	...
 ]
+
+To Python, payload is just a JSON string. 
+JS can have whatever in the payload. 
+Note: payload is not an object, but a JSON. So Each entry is a nested JSON. 

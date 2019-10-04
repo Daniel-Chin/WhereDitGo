@@ -1,6 +1,7 @@
 Methods:
 	getAll
-	add
-	delete
+	add (POST)
+	delete (does not save)
+	save (modify = delete+add, delete = delete+save)
 	git
 	shutdown
