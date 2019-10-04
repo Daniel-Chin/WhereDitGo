@@ -57,7 +57,9 @@ payload: {
     explanation: "NJtransit train from NY penn to Millburn for 2019 semester", 
 }
 ```
-Again, the above uses the object representation for the ease of reaading, but in reality this `payload` is encoded into JSON string.   
+Again, the above uses the object representation for the ease of reaading, but in reality this `payload` is encoded into JSON string.  
+
+In Python backend, it is stored in RAM as a list of dicts.  
 
 ### Python backend implementation
 The principle is to minimize frontend wait time of one request.  
@@ -70,6 +72,7 @@ Note: payload is not an object, but a JSON. So Each entry is a nested JSON.
 
 The Python backend API provides the following methods:  
 (Note that modify = `delete`+`add`; delete = `delete`+`save`)  
+(Benefit: so that `modify` is "atomic" in terms of persistent storage)  
 
 #### `getAll`
 Responds with the entire database.  
