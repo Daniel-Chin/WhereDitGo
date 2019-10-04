@@ -1,15 +1,18 @@
 # Where Dit'Go? 
+**It is under construction!!!**  
+
 Where did it go?  
 Where did all my money go?  
 
 Use this mobile app to record expenses.  
 
-It is under construction.  
-
 ## How to use
 Run `dit` in Termux, and it will open your browser to present the app.  
+Best with Termux Widget.  
 
-## features
+## Features
+* Tag your expenses, explain your tags, rename your tags  
+* Smart tag suggestions using Bayes Rule.  
 * The money amount input interface supports +-*/.  
 * Git backup and version track your database. (Periodic + manual)  
 * Robust interrupt-proof file saving strategy.  
@@ -26,24 +29,44 @@ Each time JS frontend requests a change in the database, Python backend responds
 The database is a JSON array of "entries".  
 Each entry contains `token`, `time`, and `payload`:  
 ```JSON
-{	# named tuple
-    token: 'q4fq8p7f298'
-    time: 394827
-    payload: {
-        amount: 3
-        currency_type: dollar
-        tags: [
-            ...
-        ]
-        comment: chicken sandwich
-    }
+{
+    token: "q4fq8p7f298", 
+    time: 1570200303,
+    payload: "...", 
 }
 ```
+The `payload` is a nested JSON string, which can either be an "expense entry" or a "tag definition":  
+```JSON
+payload: {
+    type: "expense", 
+    amount: 3, 
+    currency_type: "dollar", 
+    tags: [
+        "aq43aw312", // That's a tag token
+        ...
+    ], 
+    comment: "chicken sandwich", 
+}
+```
+or  
+```JSON
+payload: {
+    type: "tag", 
+    tag_token: "aeg43wgre", 
+    tag_name: "Train", 
+    explanation: "NJtransit train from NY penn to Millburn for 2019 semester", 
+}
+```
+Again, the above uses the object representation for the ease of reaading, but in reality this `payload` is encoded into JSON string.   
 
 ### Python backend implementation
 The principle is to minimize frontend wait time of one request.  
 This makes sense because there is only one frontend client.  
 For the same reason, the Python backend is also single-thread.  
+
+To Python backend, `payload` is just a JSON string. 
+JS can have whatever in the payload. 
+Note: payload is not an object, but a JSON. So Each entry is a nested JSON. 
 
 The Python backend API provides the following methods:  
 (Note that modify = `delete`+`add`; delete = `delete`+`save`)  
@@ -83,5 +106,4 @@ Responds with the output message.
 Shutdown the Python backend.  
 
 ## Future works
-* If I can interrupt pickle.dump, then allow preemtive database writes.  
 * Does it make sense to git commit every time there is a DELETE request?  
