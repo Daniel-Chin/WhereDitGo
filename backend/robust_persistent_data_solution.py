@@ -46,7 +46,7 @@ class Storage:
                 print('You are all set. ')
                 filename = DATABASE_FILENAMES[0]
             self.file = open(filename, self.mode)
-            return self.file, filename
+            return self.file, self.fileSize(filename)
     
     def __exit__(self, exc_type, exc_val, exc_tb):
         try:
@@ -56,6 +56,11 @@ class Storage:
                 with ChangeDir(DATABASE_PATH):
                     with open(WHICH_FILENAME, 'wb') as f:
                         f.write(bytes([self.writing_which]))
+    
+    def fileSize(self, filename):
+        if self.mode == 'r':
+            return os.path.getsize(filename)
+        return None
 
 class ChangeDir:
     def __init__(self, path):

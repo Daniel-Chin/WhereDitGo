@@ -8,7 +8,7 @@ field1=value1&field2=value2
 A
 '''
 from os import path
-from robust_persistent_data_solution import Storage, git, DATABASE_PATH
+from robust_persistent_data_solution import Storage, git
 
 PAGE = 4096
 
@@ -75,10 +75,6 @@ class RequestHandler:
     
     def getAll(self):
         self.drainRequest()
-        with Storage('r') as (f, filename):
-            size = path.getsize(path.join(DATABASE_PATH, filename))
+        with Storage('r') as (f, size):
             self.respondHeader(size)
-            frame = None
-            while frame != b'':
-                frame = f.read(PAGE)
-                self.sock.sendall(frame)
+            self.sock.sendfile(f)
