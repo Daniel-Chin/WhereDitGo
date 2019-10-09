@@ -9,6 +9,7 @@ Write operation:
 This ensures:  
 * Whenever the user unplug their machine, the which_file always points to a non-corrupted database.  
 * Every write operation is atomic. Either we revert back to the state before the write, or the write is 100% complete. There is no middle state.  
+However, concurrent writing leads to undefined behavior.  
 
 I don't know what this strategy is called. If you know what it's called, please open an issue and tell me.  
 '''
@@ -30,9 +31,9 @@ class Storage:
                     which = f.read()[0]
                 if self.mode == 'w':
                     self.writing_which = 1 - which
-                return open(DATABASE_FILENAMES[
+                filename = DATABASE_FILENAMES[
                     self.writing_which
-                ], self.mode)
+                ]
             except FileNotFoundError:
                 print('Welcome to Where Dit Go! ')
                 with open(DATABASE_FILENAMES[0], 'w+') as f:
@@ -43,13 +44,18 @@ class Storage:
                 gitInit = Popen(['git', 'init'])
                 gitInit.wait()
                 print('You are all set. ')
-                return open(DATABASE_FILENAMES[0], self.mode)
+                filename = DATABASE_FILENAMES[0]
+            self.file = open(filename, self.mode)
+            return self.file, filename
     
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.mode == 'w':
-            with ChangeDir(DATABASE_PATH):
-                with open(WHICH_FILENAME, 'wb') as f:
-                    f.write(bytes([self.writing_which]))
+        try:
+            self.file.close()
+        finally:
+            if self.mode == 'w' and exc_type is None:
+                with ChangeDir(DATABASE_PATH):
+                    with open(WHICH_FILENAME, 'wb') as f:
+                        f.write(bytes([self.writing_which]))
 
 class ChangeDir:
     def __init__(self, path):

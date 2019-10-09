@@ -1,28 +1,39 @@
+'''
+POST /test HTTP/1.1
+Host: foo.example
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 27
+
+field1=value1&field2=value2
+A
+'''
+from os import path
+from robust_persistent_data_solution import Storage, git, DATABASE_PATH
+
 PAGE = 4096
 
-class RequestHandler(Thread):
-    def __init__(self, sock, addr, serverThread):
-        super().__init__()
+class RequestHandler:
+    def __init__(self, sock, addr, database):
         self.sock = sock
         self.addr = addr
-        self.database = serverThread.database
-        self.databaseLock = serverThread.databaseLock
-        self.setName(f'Handler of {addr}')
+        self.database = database
     
-    def run(self):
-        with self.databaseLock:
-            print('Serving', self.addr, end = ' ', flush = True)
-            try:
-                target = recvUntil(b'\r\n').split(' ')[1]
-                print(target)
+    def do(self, validator):
+        print('Serving', self.addr, end = ' ', flush = True)
+        try:
+            target = self.recvUntil(b'\r\n').split(' ')[1]
+            print(target)
+            if validator(self.addr, target):
                 try:
                     self.__getattribute__(target)()
                 except AttributeError:
                     print("Sadly, we don't provide such a service. ")
-            except (ConnectionAbortedError, ConnectionResetError):
-                pass
-            finally:
-                self.sock.close()
+            else:
+                raise AssertionError('Request validation failed')
+        except (ConnectionAbortedError, ConnectionResetError):
+            print(self.addr, 'aborted. ')
+        finally:
+            self.sock.close()
     
     def recvall(self, n_bytes):
         buffer = bytearray()
@@ -57,9 +68,17 @@ class RequestHandler(Thread):
             if len(buffer) > max_length:
                 raise BufferError('drainRequest: too long.')
     
+    def respondHeader(self, content_len):
+        self.sock.sendall(b'HTTP/1.1 200 OK\r\n')
+        self.sock.sendall(b'Content-Length: %d\r\n' % content_len)
+        self.sock.sendall(b'Content-Type: text/html\r\n\r\n')
+    
     def getAll(self):
         self.drainRequest()
-        cursor = self.database
-        while cursor[1] is not None:
-            cursor = cursor[1]
-            cursor[0]
+        with Storage('r') as (f, filename):
+            size = path.getsize(path.join(DATABASE_PATH, filename))
+            self.respondHeader(size)
+            frame = None
+            while frame != b'':
+                frame = f.read(PAGE)
+                self.sock.sendall(frame)
