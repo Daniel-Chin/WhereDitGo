@@ -80,13 +80,11 @@ Here we send the database file on the harddrive.
 
 #### `add`
 Query string ?entry={`encodeURI(json_of_entry)`}  
-Add an entry to the database. Python inserts the entry, making sure the database is sorted in terms of `time`.  
-Here, as we iterate through the database in RAM, we do four things for each entry:  
-0. Check for token collision  
+Add an entry to the database. Python checks for token collision, and inserts the entry, making sure the database is sorted in terms of `time`.  
+Here, as we iterate through the database in RAM, we do three things for each entry:  
 1. Perform the `add` operation  
 2. Perform the `delete` operation (explained later)  
-3. Send the entry to frontend  
-4. Write entry to local file  
+3. Write entry to local file  
 
 Finally the database reloads from the file.  
 
@@ -97,10 +95,9 @@ The next time we `add` or `save`, when we iterate through the database, delete t
 
 #### `save`
 Saves the database to local file.  
-Here, as we iterate through the database in RAM, we do three things for each entry:  
+Here, as we iterate through the database in RAM, we do two things for each entry:  
 1. Perform the `delete` operation (explained in `delete`)  
-2. Send the entry to frontend  
-3. Write entry to local file  
+2. Write entry to local file  
 
 Finally the database reloads from the file.  
 The sole purpose of `save` is to work with `delete`.  
@@ -115,3 +112,7 @@ Shutdown the Python backend.
 
 ## Future works
 * Does it make sense to git commit every time there is a DELETE request?  
+
+## Discussion
+* Why don't I use POST for `add`? Because POST involves content encoding, so I would have to respond to OPTIONS and HEAD... Nah.  
+* Why don't I send the entries to the client while we iterate through the database for `add` and `save`? Well, the backend doesn't know `content-length` in advance, and [Chunked Transfer Coding](https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1) is too much of a rabbit hole for this app. Since I decided not to use other people's web serving libraries, and my purpose here is not to write such a library, I might as well keep everything simple.  
