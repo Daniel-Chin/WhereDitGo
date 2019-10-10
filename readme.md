@@ -80,12 +80,11 @@ Here we send the database file on the harddrive.
 
 #### `add`
 Query string ?entry={`encodeURI(json_of_entry)`}  
-Add an entry to the database. Python inserts the entry, making sure the database is sorted in terms of `time`. Responds with the entire database.  
+Add an entry to the database. Python inserts the entry, making sure the database is sorted in terms of `time`.  
 Here, as we iterate through the database in RAM, we do four things for each entry:  
 1. Perform the `add` operation  
 2. Perform the `delete` operation (explained later)  
-3. Send entry to frontend  
-4. Write entry to local file  
+3. Write entry to local file  
 
 #### `delete`
 JS frontend provides `token`.  
@@ -96,8 +95,7 @@ The next time we `add` or `save`, when we iterate through the database, delete t
 Saves the database to local file.  
 Here, as we iterate through the database in RAM, we do three things for each entry:  
 1. Perform the `delete` operation (explained in `delete`)  
-2. Send entry to frontend  
-3. Write entry to local file  
+2. Write entry to local file  
 
 The sole purpose of `save` is to work with `delete`.  
 
