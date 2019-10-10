@@ -16,7 +16,7 @@ I don't know what this strategy is called. If you know what it's called, please 
 import os
 from subprocess import Popen, check_output
 
-DATABASE_PATH = 'database/'
+DATABASE_PATH = 'persistent/'
 DATABASE_FILENAMES = ['0.json', '1.json']
 WHICH_FILENAME = 'which_file_is_valid.onebyte'
 
