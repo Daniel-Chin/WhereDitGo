@@ -82,12 +82,16 @@ Here we send the database file on the harddrive.
 Query string ?entry={`encodeURI(json_of_entry)`}  
 Add an entry to the database. Python inserts the entry, making sure the database is sorted in terms of `time`.  
 Here, as we iterate through the database in RAM, we do four things for each entry:  
+0. Check for token collision  
 1. Perform the `add` operation  
 2. Perform the `delete` operation (explained later)  
-3. Write entry to local file  
+3. Send the entry to frontend  
+4. Write entry to local file  
+
+Finally the database reloads from the file.  
 
 #### `delete`
-JS frontend provides `token`.  
+Query string ?token={`token`}  
 Python remembers the token.  
 The next time we `add` or `save`, when we iterate through the database, delete the entry.  
 
@@ -95,13 +99,16 @@ The next time we `add` or `save`, when we iterate through the database, delete t
 Saves the database to local file.  
 Here, as we iterate through the database in RAM, we do three things for each entry:  
 1. Perform the `delete` operation (explained in `delete`)  
-2. Write entry to local file  
+2. Send the entry to frontend  
+3. Write entry to local file  
 
+Finally the database reloads from the file.  
 The sole purpose of `save` is to work with `delete`.  
 
 #### `git`
-Backup the database by doing `git add -A` and `git commit -m "automatic"`.  
-Responds with the output message.  
+Query string ?message={`message`}  
+Backup the database by doing `git add -A` and `git commit -m {message}`.  
+Responds with the output text from git.  
 
 #### `shutdown`
 Shutdown the Python backend.  
