@@ -31,6 +31,8 @@ class Database:
                     yield to_add
                     to_add = None
                 yield entry
+        if to_add is not None:
+            yield to_add
 
     def saveToStorage(self):
         first = True
