@@ -25,7 +25,7 @@ class RequestHandler:
             print(target)
             if validator(self.addr, target):
                 try:
-                    self.__getattribute__(target)()
+                    return self.__getattribute__(target)()
                 except AttributeError:
                     print("Sadly, we don't provide such a service. ")
             else:
@@ -34,6 +34,7 @@ class RequestHandler:
             print(self.addr, 'aborted. ')
         finally:
             self.sock.close()
+        return True
     
     def recvall(self, n_bytes):
         buffer = bytearray()
@@ -70,6 +71,7 @@ class RequestHandler:
     
     def respondHeader(self, content_len):
         self.sock.sendall(b'HTTP/1.1 200 OK\r\n')
+        self.sock.sendall(b'Connection: close\r\n')
         self.sock.sendall(b'Content-Length: %d\r\n' % content_len)
         self.sock.sendall(b'Content-Type: text/html\r\n\r\n')
     
@@ -78,3 +80,4 @@ class RequestHandler:
         with Storage('r') as (f, size):
             self.respondHeader(size)
             self.sock.sendfile(f)
+        return True

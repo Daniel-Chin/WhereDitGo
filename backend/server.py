@@ -18,4 +18,8 @@ class Server:
     
     def handleOne(self, database, validator = lambda *a, **k : True):
         s, addr = self.sock.accept()
-        RequestHandler(s, addr, database).do(validator)
+        return RequestHandler(s, addr, database).do(validator)
+    
+    def serveLoop(self, database):
+        while self.handleOne(database):
+            pass

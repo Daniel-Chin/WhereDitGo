@@ -12,6 +12,8 @@ def main():
         server.handleOne(database, lambda _, target: (
             target == 'getAll'
         ))
+        database.loadFromStorage()
+        server.serveLoop(database)
 
 if __name__ == '__main__':
     try:
@@ -23,3 +25,4 @@ if __name__ == '__main__':
         input('Press enter to terminate...')
         # So that termux doesn't close, so we can see the error
         raise
+    input('Successfully terminated. Enter...')
