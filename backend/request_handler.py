@@ -72,6 +72,10 @@ class RequestHandler:
         self.sock.sendall(b'Content-Length: %d\r\n' % content_len)
         self.sock.sendall(b'Content-Type: text/html\r\n\r\n')
     
+    def respondOK(self):
+        self.respondHeader(2)
+        self.sock.sendall(b'OK')
+
     def getAll(self, _):
         self.drainRequest()
         with Storage('r') as (f, size):
@@ -86,5 +90,6 @@ class RequestHandler:
         entry = json.loads(unquote(value))
         self.database.to_add = entry
         self.database.saveToStorage()
-        ...
+        self.respondOK()
         self.database.loadFromStorage()
+        return True
