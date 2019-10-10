@@ -7,11 +7,11 @@ from database import Database
 def main():
     assert path.dirname(path.abspath(__file__)) == os.getcwd() ####
     port = int(sys.argv[1])
-    database = Database()
     with Server(port) as (server, serverSock):
-        server.handleOne(database, lambda _, target: (
+        server.handleOne(None, lambda _, target: (
             target == 'getAll'
         ))
+        database = Database()
         database.loadFromStorage()
         server.serveLoop(database)
 

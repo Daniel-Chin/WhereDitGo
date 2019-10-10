@@ -2,11 +2,6 @@ import json
 from robust_persistent_data_solution import Storage
 
 class Database:
-    def __init__(self):
-        self.list = []
-        self.to_add = None
-        self.to_delete = None
-
     def loadFromStorage(self):
         with Storage('r') as (f, _):
             self.list = json.load(f)
