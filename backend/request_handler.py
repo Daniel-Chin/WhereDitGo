@@ -1,14 +1,7 @@
-'''
-POST /test HTTP/1.1
-Host: foo.example
-Content-Type: application/x-www-form-urlencoded
-Content-Length: 27
-
-field1=value1&field2=value2
-A
-'''
 from os import path
 from robust_persistent_data_solution import Storage, git
+from urllib.parse import unquote
+import json
 
 PAGE = 4096
 
@@ -22,10 +15,14 @@ class RequestHandler:
         print('Serving', self.addr, end = ' ', flush = True)
         try:
             verb, target, _ = self.recvUntil(b'\r\n').split(' ')
+            if '?' in target:
+                target, query = target.split('?', 1)
+            else:
+                query = None
             print(verb, target)
             if validator(self.addr, target):
                 try:
-                    return self.__getattribute__(target)()
+                    return self.__getattribute__(target)(query)
                 except AttributeError:
                     print("Sadly, we don't provide such a service. ")
             else:
@@ -75,12 +72,19 @@ class RequestHandler:
         self.sock.sendall(b'Content-Length: %d\r\n' % content_len)
         self.sock.sendall(b'Content-Type: text/html\r\n\r\n')
     
-    def getAll(self):
+    def getAll(self, _):
         self.drainRequest()
         with Storage('r') as (f, size):
             self.respondHeader(size)
             self.sock.sendfile(f)
         return True
     
-    def add(self):
-        
+    def add(self, query):
+        self.drainRequest()
+        key, value = query.split('=', 1)
+        assert key == 'entry'
+        entry = json.loads(unquote(value))
+        self.database.to_add = entry
+        self.database.saveToStorage()
+        ...
+        self.database.loadFromStorage()
