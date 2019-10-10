@@ -14,4 +14,12 @@ def main():
         ))
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except:
+        print('\n Uh oh, exception from `main()`:\n')
+        import traceback
+        traceback.print_exc()
+        input('Press enter to terminate...')
+        # So that termux doesn't close, so we can see the error
+        raise

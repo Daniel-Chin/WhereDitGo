@@ -33,6 +33,7 @@ class Database:
                 yield entry
         if to_add is not None:
             yield to_add
+        assert to_delete is None
 
     def saveToStorage(self):
         first = True
