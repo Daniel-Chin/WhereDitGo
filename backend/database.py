@@ -7,6 +7,9 @@ class Database:
             self.list = json.load(f)
         self.to_add = None
         self.to_delete = None
+        token_set = set()   # localize variable to reduce overhead
+        [token_set.add(x['token']) for x in self.list]
+        self.token_set = token_set
     
     def entryIter(self):
         # localize variable to reduce overhead
