@@ -56,6 +56,7 @@ class Storage:
                 with ChangeDir(DATABASE_PATH):
                     with open(WHICH_FILENAME, 'wb') as f:
                         f.write(bytes([self.writing_which]))
+                print('Database SWAP success, pointing to', self.writing_which)
     
     def fileSize(self, filename):
         if self.mode == 'r':
@@ -78,6 +79,6 @@ def git(message = 'fuzzy pickles'):
     Return bytes.  
     '''
     with ChangeDir(DATABASE_PATH):
-        output = check_output(['git', 'add', '-A'])
+        output = check_output(['git', 'add', '-A']) + '\n'
         output += check_output(['git', 'commit', '-m', f'"{message}"'])
         return output

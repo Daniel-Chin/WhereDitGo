@@ -12,6 +12,9 @@ class RequestHandler:
         self.database = database
     
     def do(self, validator):
+        '''
+        Return False for shutdown request.  
+        '''
         print('Serving', self.addr, end = ' ', flush = True)
         try:
             verb, target, _ = self.recvUntil(b'\r\n').split(' ')
@@ -84,12 +87,44 @@ class RequestHandler:
         return True
     
     def add(self, query):
-        self.drainRequest()
+        # self.drainRequest() is done by self.save()
         key, value = query.split('=', 1)
         assert key == 'entry'
         entry = json.loads(unquote(value))
+        print('Adding entry, token =', entry['token'])
+        assert entry['token'] not in self.database.token_set
         self.database.to_add = entry
+        self.save(None)
+        return True
+    
+    def delete(self, query):
+        self.drainRequest()
+        key, token = query.split('=', 1)
+        assert key == 'token'
+        print('Scheduling to delete entry, token =', token)
+        self.database.to_delete = token
+        self.respondOK()
+        return True
+    
+    def save(self, _):
+        self.drainRequest()
         self.database.saveToStorage()
         self.respondOK()
         self.database.loadFromStorage()
         return True
+    
+    def git(self, query):
+        self.drainRequest()
+        key, message = query.split('=', 1)
+        assert key == 'message'
+        print('Git is committing:', message)
+        response = git(message).encode()
+        self.respondHeader(len(response))
+        self.sock.sendall(response)
+        return True
+    
+    def shutdown(self, _):
+        self.drainRequest()
+        print('Frontend requests shutdown. ')
+        self.respondOK()
+        return False
