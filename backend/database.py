@@ -1,5 +1,5 @@
 import json
-from robust_persistent_data_solution import Storage, git
+from robust_persistent_data_solution import Storage
 
 class Database:
     def __init__(self):

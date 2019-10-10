@@ -14,7 +14,7 @@ Best with Termux Widget.
 * Tag your expenses, explain your tags, rename your tags  
 * Smart tag suggestions using Bayes Rule.  
 * The money amount input interface supports +-*/.  
-* Git backup and version track your database. (Periodic + manual)  
+* Git backup and version track your database.  
 * Robust interrupt-proof file saving strategy.  
 * Export your data free of charge. (The main reason I wrote this for myself)  
 
@@ -79,7 +79,7 @@ Responds with the entire database.
 Here we send the database file on the harddrive.  
 
 #### `add`
-Expects a POST request.  
+Query string ?entry={`encodeURI(json_of_entry)`}  
 Add an entry to the database. Python inserts the entry, making sure the database is sorted in terms of `time`. Responds with the entire database.  
 Here, as we iterate through the database in RAM, we do four things for each entry:  
 1. Perform the `add` operation  

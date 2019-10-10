@@ -21,8 +21,8 @@ class RequestHandler:
     def do(self, validator):
         print('Serving', self.addr, end = ' ', flush = True)
         try:
-            target = self.recvUntil(b'\r\n').split(' ')[1]
-            print(target)
+            verb, target, _ = self.recvUntil(b'\r\n').split(' ')
+            print(verb, target)
             if validator(self.addr, target):
                 try:
                     return self.__getattribute__(target)()
@@ -81,3 +81,6 @@ class RequestHandler:
             self.respondHeader(size)
             self.sock.sendfile(f)
         return True
+    
+    def add(self):
+        
