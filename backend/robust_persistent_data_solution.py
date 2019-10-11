@@ -29,10 +29,11 @@ class Storage:
             try:
                 with open(WHICH_FILENAME, 'rb') as f:
                     which = f.read()[0]
-                if self.mode == 'w':
+                if 'w' in self.mode:
                     self.writing_which = 1 - which
+                    which = self.writing_which
                 filename = DATABASE_FILENAMES[
-                    self.writing_which
+                    which
                 ]
             except FileNotFoundError:
                 print('Welcome to Where Dit Go! ')
@@ -52,14 +53,14 @@ class Storage:
         try:
             self.file.close()
         finally:
-            if self.mode == 'w' and exc_type is None:
+            if 'w' in self.mode and exc_type is None:
                 with ChangeDir(DATABASE_PATH):
                     with open(WHICH_FILENAME, 'wb') as f:
                         f.write(bytes([self.writing_which]))
                 print('Database SWAP success, pointing to', self.writing_which)
     
     def fileSize(self, filename):
-        if self.mode == 'r':
+        if 'r' in self.mode:
             return os.path.getsize(filename)
         return None
 
