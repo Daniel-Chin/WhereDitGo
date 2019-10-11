@@ -25,18 +25,18 @@ class RequestHandler:
         '''
         print('Serving', self.addr, end = ' ', flush = True)
         try:
-            verb, target, _ = self.recvUntil(b'\r\n').decode().split(' ')
+            _, target, _ = self.recvUntil(b'\r\n').decode().split(' ')
             if '?' in target:
                 target, query = target.split('?', 1)
             else:
                 query = None
-            target = target.strip('/')
-            print(verb, target)
+            target = target.lstrip('/')
+            print(target)
             if validator(self.addr, target):
                 if target in METHODS:
                     return self.__getattribute__(target)(query)
                 else:
-                    print("Sadly, we don't provide such a service. ")
+                    print("\tSadly, we don't provide such a service. ")
             else:
                 raise AssertionError('Request validation failed')
         except (ConnectionAbortedError, ConnectionResetError):
@@ -100,8 +100,12 @@ class RequestHandler:
         key, value = query.split('=', 1)
         assert key == 'entry'
         entry = json.loads(unquote(value))
-        print('Adding entry, token =', entry['token'])
-        assert entry['token'] not in self.database.token_set
+        token = entry['token']
+        print('Adding entry, token =', token)
+        if token == self.database.to_delete:
+            print('It is: delete + add = modification')
+        elif token in self.database.token_set:
+            raise KeyError('Duplicate token!')
         self.database.to_add = entry
         self.save(None)
         return True
@@ -127,9 +131,10 @@ class RequestHandler:
         key, message = query.split('=', 1)
         assert key == 'message'
         print('Git is committing:', message)
-        response = git(message).encode()
+        response = git(message)
         self.respondHeader(len(response))
         self.sock.sendall(response)
+        print(response.decode())
         return True
     
     def shutdown(self, _):

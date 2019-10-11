@@ -31,7 +31,8 @@ class Database:
                 yield entry
         if to_add is not None:
             yield to_add
-        assert to_delete is None
+        if to_delete is not None:
+            raise KeyError('delete non-exist token')
 
     def saveToStorage(self):
         first = True

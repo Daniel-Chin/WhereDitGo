@@ -14,7 +14,7 @@ However, concurrent writing leads to undefined behavior.
 I don't know what this strategy is called. If you know what it's called, please open an issue and tell me.  
 '''
 import os
-from subprocess import Popen, check_output
+from subprocess import Popen, check_output, CalledProcessError
 
 DATABASE_PATH = 'persistent/'
 DATABASE_FILENAMES = ['0.json', '1.json']
@@ -80,6 +80,10 @@ def git(message = 'fuzzy pickles'):
     Return bytes.  
     '''
     with ChangeDir(DATABASE_PATH):
-        output = check_output(['git', 'add', '-A']) + '\n'
-        output += check_output(['git', 'commit', '-m', f'"{message}"'])
+        output = check_output(['git', 'add', '-A']) + b'\n'
+        try:
+            output += check_output(['git', 'commit', '-m', f'"{message}"'])
+        except CalledProcessError:  
+            # nothing to commit, git exit status code 1
+            output += check_output(['git', 'status'])
         return output
