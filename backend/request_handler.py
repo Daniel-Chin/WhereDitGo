@@ -36,7 +36,9 @@ class RequestHandler:
                 if target in METHODS:
                     return self.__getattribute__(target)(query)
                 else:
-                    print("\tSadly, we don't provide such a service. ")
+                    if target not in ('favicon.ico'):
+                        # __repr__ to prevent printing control characters
+                        raise Exception(f'Illegal terget: {target.__repr__()}')
             else:
                 raise AssertionError('Request validation failed')
         except (ConnectionAbortedError, ConnectionResetError):
