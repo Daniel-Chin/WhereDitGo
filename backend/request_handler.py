@@ -25,7 +25,9 @@ class RequestHandler:
         '''
         print('Serving', self.addr, end = ' ', flush = True)
         try:
-            _, target, _ = self.recvUntil(b'\n').decode().split(' ')
+            verb, target, _ = self.recvUntil(b'\n').decode().split(' ')
+            if verb == 'OPTIONS':
+                target = 'options'
             if '?' in target:
                 target, query = target.split('?', 1)
             else:
@@ -83,6 +85,7 @@ class RequestHandler:
     def respondHeader(self, content_len):
         self.sock.sendall(b'HTTP/1.1 200 OK\r\n')
         self.sock.sendall(b'Connection: close\r\n')
+        self.sock.sendall(b'Access-Control-Allow-Origin: *\r\n')
         self.sock.sendall(b'Content-Length: %d\r\n' % content_len)
         self.sock.sendall(b'Content-Type: text/html\r\n\r\n')
     
@@ -144,3 +147,8 @@ class RequestHandler:
         print('Frontend requests shutdown. ')
         self.respondOK()
         return False
+    
+    def options(self, _):
+        self.drainRequest()
+        self.respondOK()
+        return True
