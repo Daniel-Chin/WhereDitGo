@@ -19,11 +19,15 @@ const App = () => {
       .then((response) => {
         setDatabase(JSON.parse(response.data));
         setNeedGetAll(false);
+      })
+      .catch((err) => {
+        console.log(err);
       });
     }
   }, [needGetAll, setDatabase, setNeedGetAll]);
 
   useEffect(() => {
+    if (! database) return;
     const tags = {};
     const getTag = (token) => {
       if (tags.has(token)) {
@@ -48,7 +52,7 @@ const App = () => {
       } else if (entry.payload.type === 'expense') {
         const tag_tokens = entry.payload.tags;
         tag_tokens.foreach((token) => {
-          const tag_1 = getTag(tag_token);
+          const tag_1 = getTag(token);
           tag_tokens.foreach((token_other) => {
             if (token_other !== token) {
               const old = tag_1.correlations.get(token_other) || 0;
@@ -57,7 +61,7 @@ const App = () => {
           });
         });
       } else {
-        throw `Illegal payload type "${entry.payload.type}"`;
+        throw new Error(`Illegal payload type "${entry.payload.type}"`);
       }
     });
     setTagbase(tags);

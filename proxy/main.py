@@ -10,6 +10,7 @@ def main():
   serverSock = socket()
   serverSock.bind(('localhost', proxy_port))
   serverSock.listen(5)
+  print('Proxy online...')
   while True:
     sock, _ = serverSock.accept()
     Forwarder(sock, front_port, back_port).start()
@@ -34,12 +35,21 @@ class Forwarder(Thread):
     return buffer
 
   def run(self):
+    print('Proxy: New socket')
     while True: # keep-alive
-      first_line = self.recvUntil('\n')
+      try:
+        first_line = self.recvUntil(b'\n')
+      except ConnectionAbortedError:
+        try:
+          self.sock.close()
+        finally:
+          return
       _, target, _ = first_line.decode().split(' ')
       if target.lstrip('/')[:7] == 'BACKEND':
+        print('Proxy: BACKEND relay')
         port = self.back_port
       else:
+        print('Proxy: FRONTEND relay')
         port = self.front_port
       otherSock = socket()
       otherSock.connect(('localhost', port))
