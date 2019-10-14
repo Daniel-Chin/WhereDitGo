@@ -116,3 +116,9 @@ Shutdown the Python backend.
 ## Discussion
 * Why don't I use POST for `add`? Because POST involves content encoding, so I would have to respond to OPTIONS and HEAD... Nah.  
 * Why don't I send the entries to the client while we iterate through the database for `add` and `save`? Well, the backend doesn't know `content-length` in advance, and [Chunked Transfer Coding](https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1) is too much of a rabbit hole for this app. Since I decided not to use other people's web serving libraries, and my purpose here is not to write such a library, I might as well keep everything simple.  
+
+'''
+Tag autofill amount
+del and edit
+multi select del
+'''
