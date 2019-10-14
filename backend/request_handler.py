@@ -11,7 +11,7 @@ METHODS = [
     'git', 
     'shutdown', 
 ]
-PAGE = 4096
+PAGE = 8192
 
 class RequestHandler:
     def __init__(self, sock, addr, database):
@@ -25,12 +25,12 @@ class RequestHandler:
         '''
         print('Serving', self.addr, end = ' ', flush = True)
         try:
-            _, target, _ = self.recvUntil(b'\r\n').decode().split(' ')
+            _, target, _ = self.recvUntil(b'\n').decode().split(' ')
             if '?' in target:
                 target, query = target.split('?', 1)
             else:
                 query = None
-            target = target.lstrip('/')
+            target = target.lstrip('/').lstrip('BACKEND')
             print(target)
             if validator(self.addr, target):
                 if target in METHODS:
