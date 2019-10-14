@@ -17,6 +17,7 @@ const App = () => {
     if (needGetAll) {
       axios.get('/BACKENDgetAll')
       .then((response) => {
+        console.log(response)
         setDatabase(JSON.parse(response.data));
         setNeedGetAll(false);
       })
