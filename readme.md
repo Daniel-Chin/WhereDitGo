@@ -119,6 +119,4 @@ Shutdown the Python backend.
 
 '''
 Tag autofill amount
-del and edit
-multi select del
 '''

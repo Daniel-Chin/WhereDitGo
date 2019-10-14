@@ -1,7 +1,32 @@
-Menu:
-    new
-    list
-    git
-    tags
-    analysis
-    shutdown
+Enter app:
+	/edit?new=1
+
+done with /edit:
+	/list
+
+Has footer:
+	/list
+	/tags
+	/analysis
+	/menu
+
+footer:
+	<NavLink replace>
+	// <Prompt when={multiSelectActive} message="You selected multiple items. Leaving this page will clear the selection. ">
+	layout: list, tags, edit?new=1, analysis, menu
+
+/menu:
+	git
+	shutdown
+
+/edit:
+	when going to /tag, pass state to return
+	test: tap and hold "new tag"
+
+/list:
+	tap to /entry
+	search bar
+
+/entry:
+	tap tag to /tag
+	edit button, delete button

@@ -1,0 +1,22 @@
+.Footer {
+  background-color: red;
+  height: 40px;
+}
+
+.AboveFooter {
+  height: calc(100vh - 40px);
+}
+
+.Divider {
+  width: 20vw;
+}
+
+.Nav {
+  background-color: #333;
+  transition: .3s;
+}
+
+.NavActive {
+  background-color: #ccc;
+  color: black;
+}
