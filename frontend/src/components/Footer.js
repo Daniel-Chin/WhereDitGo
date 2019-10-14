@@ -4,20 +4,26 @@ import './Footer.css';
 
 const Footer = () => {
   return (
-    <div className="Footer">
-      {['list', 'tags', 'edit', 'ana', 'menu'].map((x) => (<FooterItem name={x} />))}
-    </div>
+    <table className="Footer"><tbody><tr>
+      {['list', 'tags', 'edit', 'ana', 'menu'].map((x, i) => (
+        <FooterItem key={i} name={x} />
+      ))}
+    </tr></tbody></table>
   );
 };
 
 const FooterItem = ({ name }) => (
-  <div className="Divider">
-    <NavLink to={'/' + name} exact replace 
+  <td className="Divider">
+    <NavLink to={'/' + name} exact replace={doesReplace(name)} 
       className="Nav" activeClassName="NavActive"
     >
       {name}
     </NavLink>
-  </div>
+  </td>
+);
+
+const doesReplace = (name) => (
+  name != 'edit'
 );
 
 export default Footer;

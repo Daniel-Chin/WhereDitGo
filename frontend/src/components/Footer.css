@@ -3,17 +3,29 @@
   height: 40px;
 }
 
+.Footer > tbody {
+  display: contents;
+}
+.Footer > tbody > tr {
+  display: contents;
+}
+
 .AboveFooter {
   height: calc(100vh - 40px);
 }
 
 .Divider {
   width: 20vw;
+  padding: 0;
 }
 
 .Nav {
   background-color: #333;
+  color: white;
   transition: .3s;
+  height: 100%;
+  width: 100%;
+  display: block;
 }
 
 .NavActive {
