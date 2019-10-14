@@ -9,6 +9,11 @@ Has footer:
 	/tags
 	/analysis
 	/menu
+No footer:
+	/entry
+	/edit
+	/tag
+	/editTag
 
 footer:
 	<NavLink replace>
