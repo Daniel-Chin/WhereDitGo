@@ -1,0 +1,17 @@
+body {
+    box-sizing: border-box;
+    font-size: 20px;
+    background-color: black;
+    color: white;
+    margin: 0;
+}
+
+.Header {
+    background-color: gray;
+    height: 40px;
+}
+
+.scroller {
+    overflow-y: scroll;
+    height: calc(100% - 80px);
+}
