@@ -1,0 +1,7 @@
+Menu:
+    new
+    list
+    git
+    tags
+    analysis
+    shutdown
