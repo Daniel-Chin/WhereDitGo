@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     if (! database) return;
-    const tags = {};
+    const tags = new Map();
     const getTag = (token) => {
       if (tags.has(token)) {
         return tags.get(token);
@@ -42,7 +42,7 @@ const App = () => {
         return new_tag;
       }
     }
-    database.foreach((entry) => {
+    database.forEach((entry) => {
       entry.payload = JSON.parse(entry.payload);
       if (entry.payload.type === 'tag') {
         const { tag_token, tag_name, explanation } = entry.payload;
@@ -51,9 +51,9 @@ const App = () => {
         tag_0.explanation = explanation;
       } else if (entry.payload.type === 'expense') {
         const tag_tokens = entry.payload.tags;
-        tag_tokens.foreach((token) => {
+        tag_tokens.forEach((token) => {
           const tag_1 = getTag(token);
-          tag_tokens.foreach((token_other) => {
+          tag_tokens.forEach((token_other) => {
             if (token_other !== token) {
               const old = tag_1.correlations.get(token_other) || 0;
               tag_1.correlations.set(token_other, old + 1)
