@@ -2,28 +2,32 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Footer.css';
 
+const NAVS = [
+  { url: 'list', display: 'list', replace: true }, 
+  { url: 'tags', display: 'tags', replace: true }, 
+  { url: 'edit?new=true', display: 'new', replace: false }, 
+  { url: 'analysis', display: 'ana', replace: true }, 
+  { url: 'menu', display: 'menu', replace: true }, 
+];
+
 const Footer = () => {
   return (
-    <table className="Footer"><tbody><tr>
-      {['list', 'tags', 'edit', 'ana', 'menu'].map((x, i) => (
-        <FooterItem key={i} name={x} />
+    <ul className="Footer">
+      {NAVS.map((x, i) => (
+        <FooterItem key={i} nav={x} />
       ))}
-    </tr></tbody></table>
+    </ul>
   );
 };
 
-const FooterItem = ({ name }) => (
-  <td className="Divider">
-    <NavLink to={'/' + name} exact replace={doesReplace(name)} 
+const FooterItem = ({ nav }) => (
+  <li className="Divider">
+    <NavLink to={'/' + nav.url} exact replace={nav.replace} 
       className="Nav" activeClassName="NavActive"
     >
-      {name}
+      {nav.display}
     </NavLink>
-  </td>
-);
-
-const doesReplace = (name) => (
-  name != 'edit'
+  </li>
 );
 
 export default Footer;

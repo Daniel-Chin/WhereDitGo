@@ -1,5 +1,5 @@
 Enter app:
-	/edit?new=1
+	/edit?new=true
 
 done with /edit:
 	/list
@@ -13,7 +13,7 @@ Has footer:
 footer:
 	<NavLink replace>
 	// <Prompt when={multiSelectActive} message="You selected multiple items. Leaving this page will clear the selection. ">
-	layout: list, tags, edit?new=1, analysis, menu
+	layout: list, tags, edit?new=true, analysis, menu
 
 /menu:
 	git

@@ -1,13 +1,10 @@
 .Footer {
   background-color: red;
   height: 40px;
-}
-
-.Footer > tbody {
-  display: contents;
-}
-.Footer > tbody > tr {
-  display: contents;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 }
 
 .AboveFooter {
@@ -16,7 +13,8 @@
 
 .Divider {
   width: 20vw;
-  padding: 0;
+  float: left;
+  height: 100%;
 }
 
 .Nav {
@@ -26,6 +24,7 @@
   height: 100%;
   width: 100%;
   display: block;
+  text-align: center;
 }
 
 .NavActive {
