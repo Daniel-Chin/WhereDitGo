@@ -25,6 +25,14 @@ The project has a JS frontend and a Python backend (REST API).
 The JS frontend is in charge of UI and all the computations. The Python backend is just a database.  
 Each time JS frontend requests a change in the database, Python backend responds the request with the entire database in JSON, and JS frontend updates the UI.  
 
+To avoid CORS check, a proxy server sits in the middle.  
+```
+                  / Python backend  
+browser - proxy -<  
+                  \ React server  
+```
+All api requests prefixes the http target with 'BACKEND'.  
+
 ### Data Structure
 The database is a JSON array of "entries".  
 Each entry contains `token`, `time`, and `payload`:  
