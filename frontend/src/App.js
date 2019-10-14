@@ -17,8 +17,7 @@ const App = () => {
     if (needGetAll) {
       axios.get('http://localhost:2344/BACKENDgetAll')
       .then((response) => {
-        console.log(response)
-        setDatabase(JSON.parse(response.data));
+        setDatabase(response.data);
         setNeedGetAll(false);
       })
       .catch((err) => {
