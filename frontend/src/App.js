@@ -15,7 +15,7 @@ const App = () => {
   
   useEffect(() => {
     if (needGetAll) {
-      axios.get('/BACKENDgetAll')
+      axios.get('http://localhost:2344/BACKENDgetAll')
       .then((response) => {
         console.log(response)
         setDatabase(JSON.parse(response.data));

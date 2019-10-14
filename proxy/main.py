@@ -33,20 +33,23 @@ class Forwarder(Thread):
     assert type(terminator) is bytes
     buffer = bytearray()
     len_terminator = len(terminator)
+    print('a', end = '', flush = True)
     while buffer[- len_terminator:] != terminator:
+      print('b', end = '', flush = True)
       recved = self.sock.recv(1)
+      print('|', end = '', flush = True)
       if recved == b'':
         raise ConnectionAbortedError
       buffer.extend(recved)
       if len(buffer) > max_length:
         raise BufferError('recvUntil: message too long.')
+    print('c')
     return buffer
 
   def print(self, *arg, **kw):
     print('Proxy:', self.addr, *arg, **kw)
 
   def run(self):
-    self.print('New socket')
     carry_over = b''
     while True: # keep-alive
       try:
@@ -59,15 +62,13 @@ class Forwarder(Thread):
         finally:
           return
       _, target, _ = first_line.decode().split(' ')
+      self.print(target)
       if target.lstrip('/')[:7] == 'BACKEND':
-        self.print('BACKEND relay')
         port = self.back_port
       else:
-        self.print('FRONTEND relay')
         port = self.front_port
       otherSock = socket()
       otherSock.connect(('localhost', port))
-      self.print('Connect to other:', port)
       otherSock.sendall(first_line)
 
       # Change "host"
@@ -99,9 +100,8 @@ class Forwarder(Thread):
           self.print('Connection lost with incomplete request.')
           return
         otherSock.sendall(recved)
-        # print(recved)
         buffer = (buffer + recved)[-4:]
-      self.print('Request relayed.')
+
       if select:
         to_read = [self.sock, otherSock]
         to_except = to_read.copy()
