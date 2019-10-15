@@ -6,15 +6,23 @@ import AnalysisPage from './AnalysisPage';
 import MenuPage from './MenuPage';
 import Footer from '../components/Footer';
 
-const WithFooter = () => {
+const WithFooter = ({ database, tagbase }) => {
   return (
     <div>
       <div className="AboveFooter">
         <Switch>
-          <Route exact path='/list' component={ListPage} />
-          <Route exact path='/tags' component={TagsPage} />
-          <Route exact path='/analysis' component={AnalysisPage} />
-          <Route exact path='/menu' component={MenuPage} />
+          <Route exact path='/list'>
+            <ListPage database={database} />
+          </Route>
+          <Route exact path='/tags'>
+            <TagsPage database={database} tagbase={tagbase} />
+          </Route>
+          <Route exact path='/analysis'>
+            <AnalysisPage database={database} tagbase={tagbase} />
+          </Route>
+          <Route exact path='/menu'>
+            <MenuPage />
+          </Route>
         </Switch>
       </div>
       <Footer />

@@ -1,0 +1,44 @@
+.ListPage {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.ListEntry {
+  height: 50px;
+  padding: 0 5px;
+}
+
+.EntryLeft {
+  width: 80%;
+  height: 100%;
+  float: left;
+}
+
+.EntryRight {
+  width: 20%;
+  height: 100%;
+  float: left;
+}
+
+.EntryRight > div {
+  padding: 9px 0;
+}
+
+.tags {
+  height: 55%;
+  font-size: 18px;
+  overflow-x: scroll;
+}
+
+.comment {
+  height: 45%;
+  font-size: 14px;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.TagSpan {
+  padding: 2px 5px;
+  margin: 0 3px;
+  background-color: rgba(255, 255, 0, .2);
+}

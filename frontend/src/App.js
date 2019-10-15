@@ -17,6 +17,9 @@ const App = () => {
     if (needGetAll) {
       axios.get('http://localhost:2344/BACKENDgetAll')
       .then((response) => {
+        response.data.forEach((entry) => {
+          entry.payload = JSON.parse(entry.payload);
+        })
         setDatabase(response.data);
         setNeedGetAll(false);
       })
@@ -29,34 +32,34 @@ const App = () => {
   useEffect(() => {
     if (! database) return;
     const tags = new Map();
-    const getTag = (token) => {
-      if (tags.has(token)) {
-        return tags.get(token);
+    const getTag = (name) => {
+      if (tags.has(name)) {
+        return tags.get(name);
       } else {
         const new_tag = {
-          name: null, 
           explanation: null, 
           correlations: new Map(), 
+          amounts: new Map(), 
         };
-        tags.set(token, new_tag);
+        tags.set(name, new_tag);
         return new_tag;
       }
     }
     database.forEach((entry) => {
-      entry.payload = JSON.parse(entry.payload);
       if (entry.payload.type === 'tag') {
-        const { tag_token, tag_name, explanation } = entry.payload;
-        const tag_0 = getTag(tag_token);
-        tag_0.name = tag_name;
+        const { tag_name, explanation } = entry.payload;
+        const tag_0 = getTag(tag_name);
         tag_0.explanation = explanation;
       } else if (entry.payload.type === 'expense') {
-        const tag_tokens = entry.payload.tags;
-        tag_tokens.forEach((token) => {
-          const tag_1 = getTag(token);
-          tag_tokens.forEach((token_other) => {
-            if (token_other !== token) {
-              const old = tag_1.correlations.get(token_other) || 0;
-              tag_1.correlations.set(token_other, old + 1)
+        const tag_names = entry.payload.tags;
+        tag_names.forEach((name) => {
+          const tag_1 = getTag(name);
+          const old_amount = tag_1.amounts.get(entry.payload.amount) || 0;
+          tag_1.amounts.set(entry.payload.amount, old_amount + 1);
+          tag_names.forEach((other_name) => {
+            if (other_name !== name) {
+              const old = tag_1.correlations.get(other_name) || 0;
+              tag_1.correlations.set(other_name, old + 1)
             }
           });
         });
@@ -82,7 +85,7 @@ const App = () => {
         <WithFooter database={database} tagbase={tagbase} />
       </Route>
       <Route exact path='/entry'>
-        <EntryPage database={database} />
+        <EntryPage database={database} tagbase={tagbase} />
       </Route>
       <Route exact path='/edit'>
         <EditPage database={database} tagbase={tagbase} 
