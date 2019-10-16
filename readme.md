@@ -19,54 +19,49 @@ Best with Termux Widget.
 * Export your data free of charge. (The main reason I wrote this for myself)  
 
 ## Implementation
-I use declarative programming without any performance optimization.  
-
 The project has a JS frontend and a Python backend (REST API).  
 The JS frontend is in charge of UI and all the computations. The Python backend is just a database.  
-Each time JS frontend requests a change in the database, Python backend responds the request with the entire database in JSON, and JS frontend updates the UI.  
-
-To avoid CORS check, a proxy server sits in the middle.  
-```
-                  / Python backend  
-browser - proxy -<  
-                  \ React server  
-```
-All api requests prefixes the http target with 'BACKEND'.  
 
 ### Data Structure
-The database is a JSON array of "entries".  
-Each entry contains `token`, `time`, and `payload`:  
+There are two databases: entrybase and tagbase.  
+Each is a linked list of JSON objects.  
+Each object contains `id`, `time`, and `payload`:  
 ```JSON
 {
-    token: "q4fq8p7f298", 
-    time: 1570200303,
-    payload: "...", 
+    "id": "q4fq8p7f298", 
+    "time": 1570200303,
+    "payload": "..."
 }
 ```
-The `payload` is a nested JSON string, which can either be an "expense entry" or a "tag definition":  
+The `payload` is a nested JSON string.  
+For entrybase:  
 ```JSON
 payload: {
-    type: "expense", 
-    amount: 3, 
-    currency_type: "dollar", 
-    tags: [
-        "Train", 
-        ...
+    "amount": 3, 
+    "currency_type": "dollar", 
+    "tags": [
+        "q43f09rjr", 
+        "3489frh43"
     ], 
-    comment: "chicken sandwich", 
+    "comment": "chicken sandwich"
 }
 ```
-or  
+For tagbase:  
 ```JSON
 payload: {
-    type: "tag", 
-    tag_name: "Train", 
-    explanation: "NJtransit train from NY penn to Millburn for 2019 semester", 
+    "id": "q43f09rjr", 
+    "name": "Train", 
+    "explanation": "NJtransit train from NY penn to Millburn for 2019 semester"
 }
 ```
 Again, the above uses the object representation for the ease of reaading, but in reality this `payload` is encoded into JSON string.  
 
-In Python backend, it is stored in RAM as a list of dicts.  
+In Python backend, it is stored on the file system as a **linked file list**:  
+| File name    | id   |             |   |   |  
+|--------------|------|-------------|---|---|  
+|              | next | next id     |   |   |  
+| File content | ---  |             |   |   |  
+|              | this | JSON object |   |   |  
 
 ### Python backend implementation
 The principle is to minimize frontend wait time of one request.  
