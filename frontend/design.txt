@@ -30,7 +30,7 @@ footer:
 
 /list:
 	tap to /entry
-	search bar
+	search bar, filter tags
 
 /entry:
 	tap tag to /tag
