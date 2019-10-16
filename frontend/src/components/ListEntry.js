@@ -10,9 +10,11 @@ const ListEntry = ({ payload, backgroundColor, tagbase }) => {
     <div className='ListEntry' style={style}>
       <div className='EntryLeft'>
         <div className="tags">
-          {tags.map((tag, i) => (
-            <span className="TagSpan" key={i}>{tag}</span>
-          ))}
+          <div>
+            {tags.map((tag, i) => (
+              <span className="TagSpan" key={i}>{tag}</span>
+            ))}
+          </div>
         </div>
         <div className="comment">
           {comment}

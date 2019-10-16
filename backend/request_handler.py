@@ -32,7 +32,7 @@ class RequestHandler:
                 target, query = target.split('?', 1)
             else:
                 query = None
-            target = target.lstrip('/').lstrip('BACKEND')
+            target = target.lstrip('/')
             print(target)
             if validator(self.addr, target):
                 if target in METHODS:

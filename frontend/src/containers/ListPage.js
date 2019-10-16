@@ -10,16 +10,18 @@ const ListPage = ({ database }) => {
     )
   }
   return (
-    <div className="ListPage">
-      {
-        database
-        .filter(({ payload }) => (payload.type === 'expense'))
-        .map(({ payload }, i) => (
-          <ListEntry key={i} payload={payload} 
-            backgroundColor={i%2 ? '#000' : '#333'} 
-          />
-        ))
-      }
+    <div className="ListPage" onScroll={(event) => {
+      // event.target.scrollTop
+    }}>
+    {
+      database
+      .filter(({ payload }) => (payload.type === 'expense'))
+      .map(({ payload }, i) => (
+        <ListEntry key={i} payload={payload} 
+          backgroundColor={i%2 ? '#000' : '#333'} 
+        />
+      ))
+    }
     </div>
   );
 };

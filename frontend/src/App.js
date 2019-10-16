@@ -15,7 +15,7 @@ const App = () => {
   
   useEffect(() => {
     if (needGetAll) {
-      axios.get('http://localhost:2344/BACKENDgetAll')
+      axios.get('http://localhost:2344/getAll')
       .then((response) => {
         response.data.forEach((entry) => {
           entry.payload = JSON.parse(entry.payload);
