@@ -15,7 +15,6 @@ Best with Termux Widget.
 * Smart tag suggestions using Bayes Rule.  
 * The money amount input interface supports +-*/.  
 * Git backup and version track your database.  
-* Robust interrupt-proof file saving strategy.  
 * Export your data free of charge. (The main reason I wrote this for myself)  
 
 ## Implementation
@@ -82,8 +81,9 @@ Python backend responds with the entry described by `id`.
 
 #### `add`
 Query string `?entry={encodeURI(json_of_entry)}`  
-Add an entry to the database. Python checks for id collision, and inserts the entry, making sure the database is sorted in terms of `time`.  
-To optimize search time, we first randomly access X entries and select the one with the closest time stamp and then traverse. X = sqrt(database size)  
+Add an entry to the database. Python gives an id, and inserts the entry, making sure the database is sorted in terms of `time`.  
+JS frontend needs not provide `id`, `prev`  or `next` in the entry.  
+To optimize search time, we start from the latest entry and traverse the linked list. We periodically access a random entry and jump to it if its `time` is closer to the target.  
 
 #### `delete`
 Query string `?id={id}`  
@@ -107,6 +107,7 @@ Shutdown the Python backend.
 
 ## Discussion
 * Why don't I use POST for `add`? Because POST involves content encoding... Nah.  
+* Why not have batch `get` to save to request-response cycles? Because content-length cannot be determined in advance.  
 
 '''
 Tag autofill amount

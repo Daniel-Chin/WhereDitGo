@@ -1,18 +1,3 @@
-'''
-There are two copies of the database.  
-We use a "which_file" to point to the valid one of the two.  
-Read operation:  
-    Read the valid database.  
-Write operation:  
-    Write to the invalid database. Close it.  
-    Change which_file to point to the database we wrote to.  
-This ensures:  
-* Whenever the user unplug their machine, the which_file always points to a non-corrupted database.  
-* Every write operation is atomic. Either we revert back to the state before the write, or the write is 100% complete. There is no middle state.  
-However, concurrent writing leads to undefined behavior.  
-
-I don't know what this strategy is called. If you know what it's called, please open an issue and tell me.  
-'''
 import os
 from subprocess import Popen, check_output, CalledProcessError
 
@@ -63,17 +48,6 @@ class Storage:
         if 'r' in self.mode:
             return os.path.getsize(filename)
         return None
-
-class ChangeDir:
-    def __init__(self, path):
-        self.path = path
-    
-    def __enter__(self):
-        self.home = os.getcwd()
-        os.chdir(self.path)
-    
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        os.chdir(self.home)
 
 def git(message = 'fuzzy pickles'):
     '''
