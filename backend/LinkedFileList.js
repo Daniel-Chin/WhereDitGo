@@ -16,7 +16,7 @@ function LinkedFileList (_path) {
     }
   };
 
-  this.initDisk = () => {
+  this.initDisk = () => { // UNIT TEST PASSED
     const dir_parts = this.pathJoin('').split('/');
     const name = dir_parts[dir_parts.length - 1] || dir_parts[dir_parts.length - 2];
     fs.writeFileSync(this.pathJoin(HEAD), 
@@ -49,7 +49,7 @@ function LinkedFileList (_path) {
   };
 
   this.__list_dir = null;
-  this.listDir = () => {
+  this.listDir = () => {  // UNIT TEST PASSED
     if (this.__list_dir === null) {
       this.__list_dir = fs.readdirSync(this.pathJoin(''))
         .filter((x) => (x !== HEAD && x !== TAIL));
@@ -57,7 +57,7 @@ function LinkedFileList (_path) {
     return this.__list_dir;
   };
 
-  this.display = () => {
+  this.display = () => {  // UNIT TEST PASSED
     let id = this.getEntry(HEAD).next;
     const keys = Object.keys(this.getEntry(id));
     keys.forEach((key) => {
@@ -116,22 +116,23 @@ function LinkedFileList (_path) {
     }
   };
 
-  this.newId = () => {
+  this.newId = () => {  // UNIT TEST PASSED
     const list_dir = this.listDir();
-    const id_len = Math.floor(Math.log(
-      list_dir.length + 1, ID_CHARS.length
-    )) + 3;
+    const id_len = Math.floor(
+      Math.log(list_dir.length + 1) / Math.log(ID_CHARS.length)
+    ) + 3;
     let id = null;
     while (id === null || list_dir.includes(id)) {
       id = [...Array(id_len)].map(() => (  // Can't we have `range`?
         randomPick(ID_CHARS)  // Readability is so bad...
       )).join('');
     }
-    return id
+    return id;
   };
 
-  this.add = (entry) => {
-    const [prev, next] = this.seekTime(entry.time, TAIL);
+  this.add = (entry, seek_start) => { // UNIT TEST PASSED
+    seek_start = seek_start || TAIL;
+    const [prev, next] = this.seekTime(entry.time, seek_start);
     const id = this.newId();
     this.open(id, 'w', (fd) => {
       fs.writeSync(fd, JSON.stringify({
@@ -158,7 +159,56 @@ function LinkedFileList (_path) {
       }));
     });
     
-    this.__list_dir.push(id);
+    if (this.__list_dir !== null) {
+      this.__list_dir.push(id);
+    }
+    return id;
+  };
+
+  this.delete = (id) => { // UNIT TEST PASSED
+    const { prev, next } = this.getEntry(id);
+
+    const prevEntry = this.getEntry(prev);
+    this.open(prev, 'w', (fd) => {
+      fs.writeSync(fd, JSON.stringify({
+        ...prevEntry, 
+        next, 
+      }));
+    });
+
+    const nextEntry = this.getEntry(next);
+    this.open(next, 'w', (fd) => {
+      fs.writeSync(fd, JSON.stringify({
+        ...nextEntry, 
+        prev, 
+      }));
+    });
+
+    fs.unlinkSync(this.pathJoin(id));
+
+    if (this.__list_dir !== null) {
+      this.__list_dir = this.__list_dir.filter((x) => (x !== id));
+    }
+    return this;
+  };
+
+  this.modify = (id, entry) => {  // UNIT TEST PASSED
+    const original = this.getEntry(id);
+    const updated = {
+      ...original, 
+      ...entry, 
+    };
+    if (original.time === entry.time) {
+      // time not changed. modify in place
+      this.open(id, 'w', (fd) => {
+        fs.writeSync(fd, JSON.stringify(updated));
+      });
+    } else {
+      // time changed, needs to sort again. 
+      this.add(updated, id);
+      this.delete(id);
+    }
+    return this;
   };
 
   __init__();
@@ -168,43 +218,16 @@ const randomPick = (population) => (
   population[Math.floor(Math.random() * population.length)]
 );
 
-if (require.main === module) {
-  const main = async () => {
-    const readline = require('readline').createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    const input = async (prompt) => {
-      return new Promise((resolve, _) => {
-        readline.question(prompt, (op) => {
-          resolve(op);
-        });
-      });
-    };
-
-    const vm = require('vm');
-    const context = vm.createContext();
-    context.l = new LinkedFileList('d:/temp/database');
-    context.LinkedFileList = LinkedFileList;
-    context.console = console;
-    let op;
-    while (true) {
-      op = await input('> ');
-      if (op[op.length - 1] !== ';') {
-        op = `console.log(${op});`;
-      }
-      try {
-        vm.runInContext(op, context);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
-  main();
-}
-
 module.exports = LinkedFileList;
+
+if (require.main === module) {
+  const interactiveTester = require('@daniel.chin/interactivetester');
+  interactiveTester({
+    LinkedFileList: module.exports, 
+    l: new LinkedFileList('d:/temp/database'), 
+    console, 
+  });
+}
 
 // del list_dir when you add/remove
 // unit test
