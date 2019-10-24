@@ -16,6 +16,7 @@ Best with Termux Widget.
 * The money amount input interface supports +-*/.  
 * Git backup and version track your database.  
 * Export your data free of charge. (The main reason I wrote this for myself)  
+* Mark expense amortization over a period of time.  
 
 ## Implementation
 The project has a JS frontend and a Python backend (REST API).  
@@ -44,7 +45,10 @@ payload: {
         "q43f09rjr", 
         "3489frh43"
     ], 
-    "comment": "chicken sandwich"
+    "comment": "chicken sandwich", 
+    "additionals": [
+        ["amortize", 215703482, 12437305]
+    ]
 }
 ```
 For tagbase:  
