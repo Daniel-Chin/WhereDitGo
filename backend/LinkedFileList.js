@@ -1,5 +1,7 @@
 'use strict';
 
+const TEST_PATH = 'd:/temp/database';
+
 const fs = require('fs');
 const path = require('path');
 
@@ -294,7 +296,7 @@ if (require.main === module) {
   const interactiveTester = require('@daniel.chin/interactivetester');
   interactiveTester({
     LinkedFileList: module.exports, 
-    l: new LinkedFileList('d:/temp/database'), 
+    l: new LinkedFileList(TEST_PATH), 
     console, 
     subtract, 
   });
