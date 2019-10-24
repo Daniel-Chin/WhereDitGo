@@ -211,12 +211,76 @@ function LinkedFileList (_path) {
     return this;
   };
 
+  this.diagnose = () => { // UNIT TEST PASSED
+    // diagnose the database and fix errors.  
+    // Errors may occur if you unplug the server while writing to disk.  
+    // This does not check for circular links.  
+    const brokenPrev = [];
+    const badSort = [];
+    const id_in_chain = [];
+    let entry = this.getEntry(HEAD);
+    let last_id;
+    let last_time;
+    while ((last_id = entry.id) !== TAIL) {
+      last_time = entry.time;
+      try {
+        entry = this.getEntry(entry.next);
+      } catch (err) {
+        break;
+      }
+      id_in_chain.push(entry.id);
+      if (entry.prev !== last_id) {
+        brokenPrev.push(entry);
+      }
+      if (entry.time < last_time) {
+        badSort.push(entry);
+      }
+    }
+    id_in_chain.pop();
+    let zombieNodes = [];
+    if (id_in_chain.length !== this.listDir().length) {
+      console.log('Zombie node perceived. Searching...');
+      zombieNodes = subtract(this.listDir(), id_in_chain);
+    }
+    const n_problems = brokenPrev.length + badSort.length + zombieNodes.length;
+    if (n_problems) {
+      return this.diagnosis = {
+        brokenPrev, 
+        badSort, 
+        zombieNodes, 
+      };
+    } else {
+      return 'ok';
+    }
+  };
+
   __init__();
 };
 
 const randomPick = (population) => (
   population[Math.floor(Math.random() * population.length)]
 );
+
+const subtract = (fromWhat, subtractWhat) => {  // UNIT TEST PASSED
+  // fromWhat has to contain subtractWhat.  
+  // this algorithm assumes the result is short.  
+  // because array.push is sometimes O(n).  
+  fromWhat.sort();
+  subtractWhat.sort();
+  let i = 0;
+  const result = [];
+  for (let x of fromWhat) {
+    if (x === subtractWhat[i]) {
+      i ++;
+    } else {
+      result.push(x);
+    }
+  }
+  if (i !== subtractWhat.length) {
+    throw new Error(`fromWhat doesn't contain subtractWhat`);
+  }
+  return result;
+};
 
 module.exports = LinkedFileList;
 
@@ -226,6 +290,7 @@ if (require.main === module) {
     LinkedFileList: module.exports, 
     l: new LinkedFileList('d:/temp/database'), 
     console, 
+    subtract, 
   });
 }
 
