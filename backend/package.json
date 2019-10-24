@@ -1,0 +1,24 @@
+{
+  "name": "@daniel.chin/whereditgo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "linkedfilelist": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node ./main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniel-chin/whereditgo.git"
+  },
+  "author": "Daniel Chin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daniel-chin/whereditgo/issues"
+  },
+  "homepage": "https://github.com/daniel-chin/whereditgo#readme"
+}
