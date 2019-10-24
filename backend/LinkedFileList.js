@@ -48,6 +48,12 @@ function LinkedFileList (_path) {
     return raw;
   };
 
+  /*
+  Warning: imperative caching ahead.  
+  The variable `this.__init_dir` is imperative.  
+  Every time we change directory structure, either set it to null, or update it correctly.  
+  Otherwise `this.listDir()` will return incorrect results.  
+  */
   this.__list_dir = null;
   this.listDir = () => {  // UNIT TEST PASSED
     if (this.__list_dir === null) {
@@ -293,6 +299,3 @@ if (require.main === module) {
     subtract, 
   });
 }
-
-// del list_dir when you add/remove
-// unit test
