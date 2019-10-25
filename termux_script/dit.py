@@ -21,7 +21,7 @@ def main():
     if not DEV_SERVER:
       terminal(f'explorer http://localhost:{PORT_FRONT}')
     os.chdir('backend')
-    backendProcess = Popen(['python', 'main.py', str(PORT_BACK)])
+    backendProcess = Popen(['node', 'main.js', str(PORT_BACK)])
     backendProcess.wait()
     if DEV_SERVER:
       os.kill(frontendProcess.pid, 2)
