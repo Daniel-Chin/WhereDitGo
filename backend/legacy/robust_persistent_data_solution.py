@@ -53,6 +53,7 @@ def git(message = 'fuzzy pickles'):
     '''
     Return bytes.  
     '''
+    raise Exception('This function involves unfixed cmd injection hazard.')
     with ChangeDir(DATABASE_PATH):
         output = check_output(['git', 'add', '-A']) + b'\n'
         try:
