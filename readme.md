@@ -18,6 +18,14 @@ Best with Termux Widget.
 * Export your data free of charge. (The main reason I wrote this for myself)  
 * Mark expense amortization over a period of time.  
 
+## Termux Dependencies
+```
+pkg install git
+pkg install openssh
+pkg install node
+pkg install python
+```
+
 ## Implementation
 The project has a frontend and a backend (REST API).  
 The frontend is in charge of UI and all the computations. The backend is just a database.  
@@ -96,9 +104,18 @@ Query string `?whichdb={expense || tag}&id={id}`
 POST variable: `entry`  
 Similar to `add`. Backend finds the corresponding file and rewrite its content. Re-sort the entry according to time.  
 
-#### `git`
+#### `commit`
 Query string `?message={message}`  
 Backup the two databases by doing `git add -A` and `git commit -m {message}`.  
+Responds with the output text from git.  
+
+#### `gitConfig`
+Query string `?whichdb={expense || tag}&command={command}`  
+`command` can be things like `--get remote.origin.url` or `core.sshCommand "ssh -p 27"`
+Responds with the output text from git.  
+
+#### `push`
+Push the git repo to remote.  
 Responds with the output text from git.  
 
 #### `shutdown`

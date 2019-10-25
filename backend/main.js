@@ -50,13 +50,28 @@ app.post('/modify', (req, res) => {
   res.send('ok');
 });
 
-app.get('/git', (req, res) => {
+app.get('/commit', (req, res) => {  // UNIT TEST PASSED
   const { message } = req.query;
   let response = '';
-  response += 'expenseBase: \n';
-  response += expenseBase.git(message) + '\n';
-  response += 'tagBase: \n';
-  response += tagBase.git(message) + '\n';
+  for (let db_name of Object.keys(db)) {
+    response += db_name + 'Base: \n';
+    response += db[db_name].commit(message) + '\n';
+  }
+  res.send(response);
+});
+
+app.get('/gitConfig', (req, res) => {
+  const { whichdb, command } = req.query;
+  const response = db[whichdb].gitConfig(command);
+  res.send(response);
+});
+
+app.get('/push', (_, res) => {
+  let response = '';
+  for (let db_name of Object.keys(db)) {
+    response += db_name + 'Base: \n';
+    response += db[db_name].push() + '\n';
+  }
   res.send(response);
 });
 
