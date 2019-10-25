@@ -1,15 +1,21 @@
 {
   "name": "@daniel.chin/whereditgo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Warn: No description",
   "main": "main.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "linkedfilelist": "^1.0.0"
+    "linkedfilelist": "^1.0.2",
+    "nocache": "^2.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@daniel.chin/interactivetester": "^1.0.3",
+    "axios": "^0.19.0"
+  },
   "scripts": {
-    "test": "node ./main.js"
+    "test": "nodemon ./main.js 80"
   },
   "repository": {
     "type": "git",
