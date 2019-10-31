@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (_, res) => {
-  res.send('Send bass');
+  res.send(`DON'T PANIC`);
 });
 
 app.get('/get', (req, res) => {
