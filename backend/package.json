@@ -15,7 +15,7 @@
     "axios": "^0.19.0"
   },
   "scripts": {
-    "test": "nodemon ./main.js 80"
+    "test": "nodemon ./main.js 2344"
   },
   "repository": {
     "type": "git",
