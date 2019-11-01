@@ -1,6 +1,8 @@
 # Where Dit'Go? 
 **It is under construction!!!**  
 
+**Update: I have dumped this project!!!**  
+
 Where did it go?  
 Where did all my money go?  
 
