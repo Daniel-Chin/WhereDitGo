@@ -25,8 +25,8 @@ footer:
 	shutdown
 
 /edit:
-	when going to /tag, pass state to return
-	test: tap and hold "new tag"
+	when going to /tag, invisible content and route TagPage
+	test: can I use tap and hold "new tag"
 
 /list:
 	tap to /entry
