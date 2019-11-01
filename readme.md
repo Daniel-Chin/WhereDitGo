@@ -16,7 +16,6 @@ Best with Termux Widget.
 * The money amount input interface supports +-*/.  
 * Git backup and version track your database.  
 * Export your data free of charge. (The main reason I wrote this for myself)  
-* Mark expense amortization over a period of time.  
 
 ## Termux Dependencies
 ```
@@ -38,12 +37,12 @@ Each entry contains `id`, `time`, and `payload`:
 {
     "id": "q4fq8p7f298", 
     "time": 1570200303,
-    "payload": "...", 
+    "payload": { ... }, 
     "next": "a8fowjefor", 
     "prev": "34781bcqoe"
 }
 ```
-The `payload` is a nested JSON string.  
+The `payload` is a nested JSON object.  
 For expensebase:  
 ```JSON
 payload: {
@@ -55,7 +54,11 @@ payload: {
     ], 
     "comment": "chicken sandwich", 
     "additionals": [
-        ["amortize", 215703482, 12437305]
+        {
+            "name": "amortize", 
+            "start": 215703482, 
+            "end": 12437305
+        }
     ]
 }
 ```
@@ -63,12 +66,18 @@ For tagbase:
 ```JSON
 payload: {
     "id": "q43f09rjr", 
+    "type": "{user || amount}",
     "name": "Train", 
-    "explanation": "NJtransit train from NY penn to Millburn for 2019 semester"
+    "explanation": "NJtransit train from NY penn to Millburn for 2019 semester", 
+    "count": 18, 
+    "correlations": [
+        {
+            "id": "qwf82h", 
+            "count": 3
+        }
+    ]
 }
 ```
-Again, the above uses the object representation for the ease of reaading, but in reality this `payload` is encoded into JSON string.  
-
 The head of the linked list has `id` = '__head__'.  
 The tail of the linked list has `id` = '__tail__'.  
 
@@ -89,8 +98,7 @@ Note that `id` can be things like '__head__'.
 Backend responds with the entry described by `id`.  
 
 #### `add`
-Query string `?whichdb={expense || tag}`  
-POST variable: `entry`  
+POST variable: `{entry, whichdb={expense || tag}}`  
 Add an entry to the database. Backend gives an id, and inserts the entry, making sure the database is sorted in terms of `time`.  
 Frontend needs not provide `id`, `prev`  or `next` in the entry.  
 To optimize search time, we start from the latest entry and traverse the linked list. We periodically access a random entry and jump to it if its `time` is closer to the target.  
@@ -99,9 +107,8 @@ To optimize search time, we start from the latest entry and traverse the linked 
 Query string `?whichdb={expense || tag}&id={id}`  
 Delete the entry from the double linked list.  
 
-### `modify`
-Query string `?whichdb={expense || tag}&id={id}`  
-POST variable: `entry`  
+#### `modify`
+POST variable: `{entry, whichdb={expense || tag}, id={id}}`  
 Similar to `add`. Backend finds the corresponding file and rewrite its content. Re-sort the entry according to time.  
 
 #### `commit`
