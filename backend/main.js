@@ -31,21 +31,19 @@ app.get('/get', (req, res) => {
 });
 
 app.post('/add', (req, res) => {
-  const { whichdb } = req.query;
-  const entry = req.body.entry;
+  const { whichdb, entry } = req.body;
   db[whichdb].add(entry);
   res.send('ok');
 });
 
 app.get('/delete', (req, res) => {
   const { whichdb, id } = req.query;
-  db[whichdb].delete(entry);
+  db[whichdb].delete(id);
   res.send('ok');
 });
 
 app.post('/modify', (req, res) => {
-  const { whichdb, id } = req.query;
-  const entry = req.body.entry;
+  const { whichdb, id, entry } = req.body;
   db[whichdb].modify(id, entry);
   res.send('ok');
 });
