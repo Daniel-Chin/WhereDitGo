@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@daniel.chin/interactivetester": "^1.0.3",
-    "axios": "^0.19.0"
+    "axios": "^0.21.1"
   },
   "scripts": {
     "test": "nodemon ./main.js 2344"
